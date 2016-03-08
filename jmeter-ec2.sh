@@ -795,13 +795,11 @@ function runsetup() {
          else
                 echo "starting load test on  test agent: ${hosts[$counter]}"                         
          fi        
-        # idtoken is not logged as it makes log file huge. 
-        # If you want to log idtoken then add it in sample variable line as - 
-        # -Jsample_variables=accesstoken,verifytoken,idtoken \  
+        # If you want to log custom variables then add a sample variable line as - 
+        # -Jsample_variables=var1,var2,var3 \  
         (ssh -nqtA $ldap_name@odd-eu-$aws_region-1.$aws_account.zalan.do ssh -o StrictHostKeyChecking=no $ldap_name@${hosts[$counter]} \
         /usr/bin/$JMETER_VERSION/bin/jmeter.sh -n \
         -t $remote_home/$project_file \
-        -Jsample_variables=accesstoken,verifytoken \
         -l $remote_home/$project_name-$DATETIME-$counter.jtl \
         >> $project_home/$DATETIME-${hosts[$counter]}-jmeter.out ) &
     done
