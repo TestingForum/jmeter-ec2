@@ -1,3 +1,41 @@
+# Why modify original jmeter-ec2 project
+-----------------------------
+* [STUPify](https://stups.io/) the project. If you don't use aws/stups then you can still usee this project but would have to modify how ssh access works for you. Check out the commented lines on project.
+* No more messy Thread count modification. Hence number of threads on each  machine is same. This is similar to JMeter distributed mode wherein same number of threads are run on each machine. Hence if test plan is run with two test agents and Thread Group is set with 10 threads then total 20 threads will be run during test 
+* Flat directory when all files are at same level
+* Original project is not compatiable with later JMeter version 2.13
+* Original project does not merge puul request (at least at the time of writing this doc :-/)
+
+# But why not use JMeter distributed test instead?
+----------------------------------------------------------
+Though JMeter distributed test is an excellent way of orchastrating tests from multiple machines it lacks few features - 
+
+* Amount of manual configuration required on each test machine so that results could be sent back to master machine controlling the test. This lacune is not limited to only JMeter and true for other load testing tools as well, i.e. - [Locust](http://docs.locust.io/en/latest/running-locust-distributed.html), [Gatling](http://gatling.io/docs/2.1.7/cookbook/scaling_out.html)
+* Due to writing test results back to master JMeter machine, throughput from each test machine would diminish by ~20% than what a test machine would be capable of achieving in isloation
+* To over come previous point DiskStorage mode can be used to store results only on remote machine but this deprives us of knowning intermittent test results during test run. [JMeter Enhancement issue](https://bz.apache.org/bugzilla/show_bug.cgi?id=59041)
+
+# Enough of Gyan, how do I execuete test?
+----------------------------------------------------------
+
+Spcify the comma separated values of IP address of remote agents in jmeter-ec2.properties files as - 
+`REMOTE_HOSTS="172.31.7.59,172.31.10.159........"`
+
+NOTICE THAT test plan and test data files are scp-ed to test agents hence you should have an entry in your .ssh /config file - 
+
+* Execuete following command from root directory of project - 
+`ldap_name=<ldap_name> aws_region=central project_name=<project_name> aws_account=<aws account>=/home/<ldap_name> ./jmeter-ec2.sh`
+
+*Notce that name of test plan is provided without extenstion jmx*;
+
+# Can not I plot live graphs of test run on Grafana?
+----------------------------------------------------------------------------
+Not yet developed
+
+
+## The Original read me from [JMeter ec2 Script](https://github.com/oliverlloyd/jmeter-ec2)
+
+
+
 # JMeter ec2 Script
 -----------------------------
 
