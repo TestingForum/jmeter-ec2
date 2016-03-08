@@ -754,11 +754,6 @@ function runsetup() {
 
     echo
 
-    # run jmeter test plan
-    for host in ${hosts[@]} ; do
-        echo $host
-    done
-    #
     #    ssh -nq -o UserKnownHostsFile=/dev/null \
     #         -o StrictHostKeyChecking=no \
     #        -i $PEM_PATH/$PEM_FILE $USER@${host[$counter]} \               # ec2 key file
@@ -1002,12 +997,12 @@ function runcleanup() {
 #         scp -rp ${hosts[$i]}:$remote_home/$project-*.jtl \
 #                                     $project_home/
 
-        USER=$ldap_name piu request-access -t480 -O odd-eu-$aws_region-1.$aws_account.zalan.do ${hosts} "load testing"
-        scp -rp ${hosts}:$remote_home/$project_name-*.jtl \
+        USER=$ldap_name piu request-access -t480 -O odd-eu-$aws_region-1.$aws_account.zalan.do ${host} "load testing"
+        scp -rp ${host}:$remote_home/$project_name-*.jtl \
                                      $project_home/
         echo "$project_home/$project_name-$DATETIME-$i.jtl complete"
         # files are removed from remote agent so that consecutive test run report generation does not interfere with previous run results      
-        ( ssh -tA $ldap_name@odd-eu-$aws_region-1.$aws_account.zalan.do ssh -o StrictHostKeyChecking=no $ldap_name@${hosts} \
+        ( ssh -tA $ldap_name@odd-eu-$aws_region-1.$aws_account.zalan.do ssh -o StrictHostKeyChecking=no $ldap_name@${host} \
         rm -f *.jtl) 
          
     done
