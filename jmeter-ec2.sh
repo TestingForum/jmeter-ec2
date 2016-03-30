@@ -40,6 +40,7 @@ if [ "$1" == "-h" ] ; then
 	echo "[release]         -	optional"
 	echo "[comment]         -	optional"
     echo "[price]           -   optional"
+        echo "[jmeter_cli_path] -   optional"
 	echo
 	exit
 fi
@@ -1053,6 +1054,10 @@ function runcleanup() {
 	# columns are retained in complete.jtl file for debugging
 	cut -d, -f1-12 $project_home/$project_name-$DATETIME-complete.jtl >> $project_home/$project_name-$DATETIME-complete_sanitized.jtl
 
+	if [ -n "$jmeter_cli_path" ] ; then
+	    generatePercentileTable
+        fi
+
 	# Calclulate test duration
 #	start_time=$(head -1 $project_home/$project_name-$DATETIME-complete.jtl | cut -d',' -f1)
 #	end_time=$(tail -1 $project_home/$project_name-$DATETIME-complete.jtl | cut -d',' -f1)
@@ -1216,6 +1221,11 @@ function updateTest() {
 			dosql "$sqlUpdateStatus"
 			;;
 	esac
+}
+
+function generatePercentileTable() {
+    echo "Generating percentile report..."
+    java -jar $jmeter_cli_path/lib/ext/CMDRunner.jar --tool Reporter --input-jtl $project_home/$project_name-$DATETIME-complete_sanitized.jtl --plugin-type AggregateReport --generate-csv report.csv && sed -i -e "s/aggregate_report_//g" -e "s/\([0-9]\),\([0-9]\{1,2\}%\)/\1.\2/g" -e 's/\([0-9]\),\([0-9]\{1,2\}"\)/\1.\2/g' report.csv && column -s, -t < report.csv && rm report.csv
 }
 
 function control_c(){
