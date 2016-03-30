@@ -13,6 +13,19 @@ Though JMeter distributed test is an excellent way of orchastrating tests from m
 * Amount of manual configuration required on each test machine so that results could be sent back to master machine controlling the test. This lacune is not limited to only JMeter and true for other load testing tools as well, i.e. - [Locust](http://docs.locust.io/en/latest/running-locust-distributed.html), [Gatling](http://gatling.io/docs/2.1.7/cookbook/scaling_out.html)
 * Due to writing test results back to master JMeter machine, throughput from each test machine would diminish by ~20% than what a test machine would be capable of achieving in isloation
 * To over come previous point DiskStorage mode can be used to store results only on remote machine but this deprives us of knowning intermittent test results during test run. [JMeter Enhancement issue](https://bz.apache.org/bugzilla/show_bug.cgi?id=59041)
+ 
+# Can I automate report generation?
+----------------------------------------------------------
+Yes you can! Download the jmeter plugins, and copy them to lib/ext on your jmeter installation. Then provide the path
+to your jmeter cli path when running the script
+
+```
+wget http://jmeter-plugins.org/downloads/file/JMeterPlugins-Standard-1.3.1.zip
+unzip JMeterPlugins-Standard-1.3.1.zip
+mv lib/ext/* /opt/apache-jmeter-2.13/lib/ext/
+export jmeter_cli_path=/opt/apache-jmeter-2.13
+````
+
 
 # Enough of Gyan, how do I execuete test?
 ----------------------------------------------------------
@@ -23,7 +36,11 @@ Spcify the comma separated values of IP address of remote agents in jmeter-ec2.p
 NOTICE THAT test plan and test data files are scp-ed to test agents hence you should have an entry in your .ssh /config file - 
 
 * Execuete following command from root directory of project - 
-`ldap_name=<ldap_name> aws_region=central project_name=<project_name> aws_account=<aws account>=/home/<ldap_name> ./jmeter-ec2.sh`
+`ldap_name=<ldap_name> aws_region=central project_name=<project_name> aws_account=<aws account> remote_home=/home/<ldap_name> ./jmeter-ec2.sh`
+
+* to generate a percentile report automatically he could also run:
+
+`ldap_name=<ldap_name> aws_region=central jmeter_cli_path=/opt/apache-jmeter-2.13 project_name=<project_name> aws_account=<aws account> remote_home=/home/<ldap_name> ./jmeter-ec2.sh`
 
 *Notce that name of test plan is provided without extenstion jmx*;
 
