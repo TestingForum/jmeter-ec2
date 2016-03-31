@@ -1,10 +1,11 @@
 # Why modify original jmeter-ec2 project
 -----------------------------
-* [STUPify](https://stups.io/) the project. If you don't use aws/stups then you can still usee this project but would have to modify how ssh access works for you. Check out the commented lines on project.
+* [STUPify](https://stups.io/) the project. If you don't use aws/stups then you can still use this project but would have to modify how ssh access works for you. Check out the commented lines on project.
 * No more messy Thread count modification. Hence number of threads on each  machine is same. This is similar to JMeter distributed mode wherein same number of threads are run on each machine. Hence if test plan is run with two test agents and Thread Group is set with 10 threads then total 20 threads will be run during test 
 * Flat directory when all files are at same level
 * Original project is not compatiable with later JMeter version 2.13
-* Original project does not merge puul request (at least at the time of writing this doc :-/)
+* Original project does not merge pull request (at least at the time of writing this doc :-/)
+* My recommendation about using this project is to set up Jmeter on test machines and provide IP address of remote host on jmeter-ec2.properties files. When you want to run test proabably you want to run test immediately not wait for Jmeter/java etc to be installed on each test agent. I push jmeter to /usr/bin/ directory on test machine hence all looged in users would have acces to it. I also set up an AMI with required JMeter set up and use it to deploy new JMeter test instances. I find this approach far quicker than having to set up java and jmeter each time when running load test :-)
 
 # But why not use JMeter distributed test instead?
 ----------------------------------------------------------
